@@ -33,3 +33,12 @@ jobs:
       - name: Sts GetCallerIdentity
         run: |
           aws sts get-caller-identity
+
+      - name: Run docker
+        run: |
+          docker run -v "$PWD":/var/task "public.ecr.aws/sam/build-python3.11" /bin/sh \
+          -c "pip install \
+          -r requirements.txt \
+          --platform=manylinux_2_17_x86_64 \
+          --only-binary=:all: \
+          -t python/lib/python3.11/site-packages/; exit"
