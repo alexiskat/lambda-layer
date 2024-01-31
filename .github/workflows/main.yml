@@ -78,3 +78,9 @@ jobs:
             --organization-id ${{ secrets.AWS_ORG_ID }} \
             --action lambda:GetLayerVersion \
             --region ${{ env.AWS_REGION }}
+
+      - name: View Lambda Layer policy
+        run: |
+          aws lambda get-layer-version-policy \
+          --layer-name ${{ env.MANTIS_LIB_NAME }} \
+          --version-number ${{ steps.publish_lambda_layer.outputs.version }}
