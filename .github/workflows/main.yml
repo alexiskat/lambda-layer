@@ -10,6 +10,8 @@ on:
 
 env:
   AWS_REGION: "eu-west-2"
+  PYTHON_VER: "3.11"
+  MANTIS_LIB_NAME: "mantis-core-lib"
 
 # Permission can be added at job level or workflow level
 permissions:
@@ -25,7 +27,7 @@ jobs:
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.AWS_SS_MONITOR_IAM_ARN_S3 }} #change to reflect your IAM role’s ARN
+          role-to-assume: ${{ secrets.AWS_SS_MONITOR_IAM_ARN_S3 }}
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ env.AWS_REGION }}
 
@@ -36,9 +38,11 @@ jobs:
 
       - name: Run docker
         run: |
-          docker run -v "$PWD":/var/task "public.ecr.aws/sam/build-python3.11" /bin/sh \
-          -c "pip install \
-          -r requirements.txt \
-          --platform=manylinux_2_17_x86_64 \
-          --only-binary=:all: \
-          -t python/lib/python3.11/site-packages/; exit"
+          docker run -v "$PWD":/var/task "public.ecr.aws/sam/build-python${{env.PYTHON_VER}}" /bin/sh \
+            -c "pip install \
+            -r requirements.txt \
+            --platform=manylinux_2_17_x86_64 \
+            --only-binary=:all: \
+            -t python/lib/python${{env.PYTHON_VER}}/site-packages/; exit"
+          zip -r ${{env.MANTIS_LIB_NAME}}.zip python > /dev/null
+          aws s3 cp ${{env.MANTIS_LIB_NAME}}.zip s3://mantis-tmp
