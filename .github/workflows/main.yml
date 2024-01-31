@@ -12,13 +12,14 @@ env:
   AWS_REGION: "eu-west-2"
   PYTHON_VER: "3.11"
   MANTIS_LIB_NAME: "mantis-core-lib"
+  MANTIS_S3_BUCKET: "mantis-eu-west-2-ssmonitor-ssmo-lambda-layers"
 
 # Permission can be added at job level or workflow level
 permissions:
   id-token: write # This is required for requesting the JWT
   contents: read # This is required for actions/checkout
 jobs:
-  AssumeRoleAndCallIdentity:
+  Publish-Mantis-Lambda-Layer:
     runs-on: ubuntu-latest
     steps:
       - name: Git clone the repository
@@ -36,13 +37,44 @@ jobs:
         run: |
           aws sts get-caller-identity
 
-      - name: Run docker
+      - name: Run docker, create zip & upload to S3
         run: |
           docker run -v "$PWD":/var/task "public.ecr.aws/sam/build-python${{env.PYTHON_VER}}" /bin/sh \
             -c "pip install \
             -r requirements.txt \
             --platform=manylinux_2_17_x86_64 \
             --only-binary=:all: \
-            -t python/lib/python${{env.PYTHON_VER}}/site-packages/; exit"
-          zip -r ${{env.MANTIS_LIB_NAME}}.zip python > /dev/null
-          aws s3 cp ${{env.MANTIS_LIB_NAME}}.zip s3://mantis-tmp
+            -t python/lib/python${{ env.PYTHON_VER }}/site-packages/; exit"
+          zip -r ${{ env.MANTIS_LIB_NAME }}.zip python > /dev/null
+          aws s3 cp ${{ env.MANTIS_LIB_NAME }}.zip s3://${{ env.MANTIS_S3_BUCKET }}
+
+      - name: Create Lambda layer from zip
+        id: publish_lambda_layer
+        run: |
+          json_output=$(aws lambda publish-layer-version \
+            --layer-name ${{ env.MANTIS_LIB_NAME }}\
+            --description "mantis core lib" \
+            --license-info "MIT" \
+            --content S3Bucket=${{ env.MANTIS_S3_BUCKET }},S3Key=${{ env.MANTIS_LIB_NAME }}.zip \
+            --compatible-runtimes python${{ env.PYTHON_VER }} \
+            --region ${{ env.AWS_REGION }})
+
+          # Use jq to extract specific values from the JSON output
+          version=$(echo "$json_output" | jq -r '.Version')
+
+          # Set output variables for use in subsequent steps
+          echo "::set-output name=version::$version"
+
+      - name: Update perm
+        run: |
+          # Access the extracted values using the output variable names
+          echo "version: ${{ steps.publish_lambda_layer.outputs.version }}"
+
+          aws lambda add-layer-version-permission \
+            --layer-name ${{ env.MANTIS_LIB_NAME }}) \
+            --version-number ${{ steps.publish_lambda_layer.outputs.version }} \
+            --statement-id allOrganizationMantisCoreLib01 \
+            --principal "*" \
+            --organization-id ${{ secrets.AWS_ORG_ID }} \
+            --action lambda:GetLayerVersion \
+            --region ${{ env.AWS_REGION }}

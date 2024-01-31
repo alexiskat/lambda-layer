@@ -1,0 +1,14 @@
+{
+  "Content": {
+    "Location": "https://awslambda-eu-west-2-nlbRRk4trhSHCd6heAbmcA86S5cn2taY0L7Wy",
+    "CodeSha256": "nJIZRqrTl2/xfvs1nhvu5EeGkuqhat78WRT2sxKuTys=",
+    "CodeSize": 5745630
+  },
+  "LayerArn": "arn:aws:lambda:eu-west-2:123456789:layer:mantis-core-lib",
+  "LayerVersionArn": "arn:aws:lambda:eu-west-2:123456789:layer:mantis-core-lib:3",
+  "Description": "mantis core lib",
+  "CreatedDate": "2024-01-31T12:08:58.815+0000",
+  "Version": 3,
+  "CompatibleRuntimes": ["python3.11"],
+  "LicenseInfo": "MIT"
+}
