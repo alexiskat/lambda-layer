@@ -33,9 +33,9 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
 
       # Hello from AWS: WhoAmI
-      - name: Sts GetCallerIdentity
-        run: |
-          aws sts get-caller-identity
+      #- name: Sts GetCallerIdentity
+      #  run: |
+      #    aws sts get-caller-identity
 
       - name: Run docker, create zip & upload to S3
         run: |
@@ -65,13 +65,13 @@ jobs:
           # Set output variables for use in subsequent steps
           echo "::set-output name=version::$version"
 
-      - name: Update perm
+      - name: Update permission on Lambda Layer
         run: |
           # Access the extracted values using the output variable names
           echo "version: ${{ steps.publish_lambda_layer.outputs.version }}"
 
           aws lambda add-layer-version-permission \
-            --layer-name ${{ env.MANTIS_LIB_NAME }}) \
+            --layer-name ${{ env.MANTIS_LIB_NAME }} \
             --version-number ${{ steps.publish_lambda_layer.outputs.version }} \
             --statement-id allOrganizationMantisCoreLib01 \
             --principal "*" \
