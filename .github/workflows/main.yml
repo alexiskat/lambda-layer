@@ -48,9 +48,8 @@ jobs:
             -r requirements.txt \
             --platform=manylinux_2_17_x86_64 \
             --only-binary=:all: \
-            -t python/lib/python${{ env.PYTHON_VER }}/site-packages/; exit"
+            -t python/lib/python${{ env.PYTHON_VER }}/site-packages/; ls -alh python/lib/python${{ env.PYTHON_VER }} exit"
           zip -r ${{ env.MANTIS_LIB_NAME }}.zip python > /dev/null
-          ls -alh ${{ env.MANTIS_LIB_NAME }}.zip
           aws s3 cp ${{ env.MANTIS_LIB_NAME }}.zip s3://${{ env.MANTIS_S3_BUCKET }}
 
       - name: Create Lambda layer from zip
