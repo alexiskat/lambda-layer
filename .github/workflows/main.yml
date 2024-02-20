@@ -10,8 +10,12 @@ on:
 
 env:
   AWS_REGION: "eu-west-2"
-  PYTHON_VER: "3.11"
-  MANTIS_LIB_NAME: "mantis-core-lib"
+  #PYTHON_VER: "3.11"
+  #MANTIS_LIB_NAME: "mantis-core-lib"
+  PYTHON_VER: "3.9"
+  MANTIS_LIB_NAME: mantis-finite-difference-lib-39
+  #PYTHON_VER: "3.10"
+  #MANTIS_LIB_NAME: mantis-finite-difference-lib-310
   MANTIS_S3_BUCKET: "mantis-eu-west-2-ssmonitor-ssmo-lambda-layers"
 
 # Permission can be added at job level or workflow level
