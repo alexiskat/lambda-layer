@@ -1,0 +1,446 @@
+{
+	"info": {
+		"_postman_id": "429e418d-955f-4a97-bf2b-25b853fff684",
+		"name": "API-Rock-Physics",
+		"description": "# 🚀 Get started here\n\nThis template guides you through CRUD operations (GET, POST, PUT, DELETE), variables, and tests.\n\n## 🔖 **How to use this template**\n\n#### **Step 1: Send requests**\n\nRESTful APIs allow you to perform CRUD operations using the POST, GET, PUT, and DELETE HTTP methods.\n\nThis collection contains each of these [request](https://learning.postman.com/docs/sending-requests/requests/) types. Open each request and click \"Send\" to see what happens.\n\n#### **Step 2: View responses**\n\nObserve the response tab for status code (200 OK), response time, and size.\n\n#### **Step 3: Send new Body data**\n\nUpdate or add new data in \"Body\" in the POST request. Typically, Body data is also used in PUT request.\n\n```\n{\n    \"name\": \"Add your name in the body\"\n}\n\n ```\n\n#### **Step 4: Update the variable**\n\nVariables enable you to store and reuse values in Postman. We have created a [variable](https://learning.postman.com/docs/sending-requests/variables/) called `base_url` with the sample request [https://postman-api-learner.glitch.me](https://postman-api-learner.glitch.me). Replace it with your API endpoint to customize this collection.\n\n#### **Step 5: Add tests in the \"Tests\" tab**\n\nTests help you confirm that your API is working as expected. You can write test scripts in JavaScript and view the output in the \"Test Results\" tab.\n\n<img src=\"https://content.pstmn.io/b5f280a7-4b09-48ec-857f-0a7ed99d7ef8/U2NyZWVuc2hvdCAyMDIzLTAzLTI3IGF0IDkuNDcuMjggUE0ucG5n\">\n\n## 💪 Pro tips\n\n- Use folders to group related requests and organize the collection.\n- Add more [scripts](https://learning.postman.com/docs/writing-scripts/intro-to-scripts/) in \"Tests\" to verify if the API works as expected and execute workflows.\n    \n\n## 💡Related templates\n\n[API testing basics](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9a37a28-055b-49cd-8c7e-97494a21eb54&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[API documentation](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=e9c28f47-1253-44af-a2f3-20dce4da1f18&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)  \n[Authorization methods](https://go.postman.co/redirect/workspace?type=personal&collectionTemplateId=31a9a6ed-4cdf-4ced-984c-d12c9aec1c27&sourceTemplateId=ddb19591-3097-41cf-82af-c84273e56719)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth-Client-Cred",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "51b0de2e-b447-4aa1-94c7-1118272ef933",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"pm.test(\"Body has access_token\", () => {",
+							"    pm.expect(response).to.have.property('access_token');",
+							"});",
+							"",
+							"pm.environment.set('access_token_m2m', response.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "8da44e14-9a03-4a3d-8a95-80b154a77a70",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "{{cognito_app_m2m_secret}}",
+						"username": "{{cognito_app_m2m_id}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_reflectivity}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "{{customer_code}}-api-access/std",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/token"
+			},
+			"response": []
+		},
+		{
+			"name": "/models/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "70eb30eb-8bac-4e0a-aca0-7b226079a59c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "8567a1a6-fda6-49ea-ab7a-50949da1e8f1",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_rock_physics}}"
+					}
+				],
+				"url": {
+					"raw": "https://rock-physics.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/models?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"rock-physics",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"models"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "/models/xu-payne",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "70eb30eb-8bac-4e0a-aca0-7b226079a59c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "69a45198-e0be-4e77-a78a-f08bf5963109",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true,
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_rock_physics}}"
+					},
+					{
+						"key": "content-type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Mineral_Bulk_Modulus\": 77.0,\n    \"Mineral_Shear_Modulus\": 32.0,\n    \"Critical_Porosity\": 0.34,\n    \"Volume_Fraction_Of_Stiff_Inclusions\": 0.2,\n    \"Aspect_Ratio_Of_Stiff_Inclusions\": 0.01,\n    \"Aspect_Ratio_Of_Compliant_Inclusions\": 0.05,\n    \"Fluid_Bulk_Modulus_Of_Stiff_Inclusions\": 2.3,\n    \"Fluid_Bulk_Modulus_Of_Compliant_Inclusions\": 0.0\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rock-physics.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/models/xu-payne?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"rock-physics",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"models",
+						"xu-payne"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "/fluids/",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "70eb30eb-8bac-4e0a-aca0-7b226079a59c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "6940c0d9-62a5-4ace-b557-856204bedfc6",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_rock_physics}}"
+					}
+				],
+				"url": {
+					"raw": "https://rock-physics.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/fluids?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"rock-physics",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"fluids"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "/fluids/{fluidName}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "70eb30eb-8bac-4e0a-aca0-7b226079a59c",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "9d646897-5d63-4899-9c3a-4e15d4e3e649",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_rock_physics}}"
+					}
+				],
+				"url": {
+					"raw": "https://rock-physics.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/fluids/{{fluid_name}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"rock-physics",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"fluids",
+						"{{fluid_name}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "/models/{modelName}",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "dd3def33-15ac-43fe-9978-1e689bf6b595",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    ",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "6db68aba-b663-4e19-b87a-7bc75840a8cc",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_rock_physics}}"
+					}
+				],
+				"url": "https://rock-physics.api.{{customer_code}}.{{env}}.manccs.co.uk/models/",
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": {
+			"refreshRequestParams": [
+				{
+					"key": "grant_type",
+					"value": "refresh_token",
+					"enabled": true,
+					"send_as": "request_body"
+				},
+				{
+					"key": "client_id",
+					"value": "{{cognito_app_user_id}}",
+					"enabled": true,
+					"send_as": "request_body"
+				}
+			],
+			"clientId": "{{cognito_app_user_id}}",
+			"headerPrefix": "",
+			"tokenName": "User-Auth-Code-{{$isoTimestamp}}",
+			"tokenRequestParams": [],
+			"authRequestParams": [],
+			"challengeAlgorithm": "S256",
+			"scope": "{{customer_code}}-api-access/std",
+			"redirect_uri": "https://{{customer_code}}.{{env}}.manccs.co.uk",
+			"grant_type": "authorization_code",
+			"authUrl": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/authorize",
+			"addTokenTo": "header",
+			"client_authentication": "body",
+			"accessTokenUrl": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/token"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "e4a9e45f-06d9-4663-839b-8d981e06a464",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "9165d910-b869-4b95-be3e-fc22adc1c2af",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "fluid_name",
+			"value": "CarbonDioxide",
+			"type": "string"
+		},
+		{
+			"key": "api_version",
+			"value": "Enter the API version",
+			"type": "string"
+		}
+	]
+}
