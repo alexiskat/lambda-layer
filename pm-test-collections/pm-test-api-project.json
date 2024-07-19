@@ -1,0 +1,1169 @@
+{
+	"info": {
+		"_postman_id": "864a0d24-c82c-4669-bdf2-04d5d3022431",
+		"name": "API-Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth-Client-Cred",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "51b0de2e-b447-4aa1-94c7-1118272ef933",
+						"exec": [
+							"pm.test(\"Status code is 200\", () => {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"const response = pm.response.json();",
+							"",
+							"pm.test(\"Body has access_token\", () => {",
+							"    pm.expect(response).to.have.property('access_token');",
+							"});",
+							"//save token to environment varible access_token_m2m.",
+							"pm.environment.set('access_token_m2m', response.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "81558cee-4083-444d-b64b-02eead26a421",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"password": "{{cognito_app_m2m_secret}}",
+						"username": "{{cognito_app_m2m_id}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "scope",
+							"value": "{{customer_code}}-api-access/std",
+							"type": "text"
+						}
+					]
+				},
+				"url": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/token"
+			},
+			"response": []
+		},
+		{
+			"name": "Project-Create-New",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "51b0de2e-b447-4aa1-94c7-1118272ef933",
+						"exec": [
+							"console.clear();",
+							"let response",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"    //save the project_id from the json to the post man variable",
+							"    pm.collectionVariables.set('project_id', response.Data.project_id )",
+							"})",
+							"",
+							"// Check that we are getting back a 200 OK",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "433cd462-ead4-4136-81e7-ff0e128609d5",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"Name\": \"project abcd\",\n    \"Description\": \"project description for abcd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Project-Update-By-ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "e7548f69-c70a-4f14-bc0c-72d87c94170a",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"description\": \"tinybaws444\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Project-Delete-By-ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "639400a9-b447-4e07-9de3-49b9f9db5736",
+						"exec": [
+							"// Check that we are getting back a 200 OK",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "b4a12d44-3afa-4493-a4d7-b5caf884a90d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Projects-Get-IDs",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							"console.log(\"Hello world. PreSend\")"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "0815a439-8263-4896-90e1-db250767bdda",
+						"exec": [
+							"console.clear();",
+							"console.log(pm.response);",
+							"",
+							"let response",
+							"",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"})",
+							"",
+							"pm.test(\"Shema is valid\", function () {",
+							"    const schema ={",
+							"        type: 'object',",
+							"        properties: {",
+							"            Data: {",
+							"                type: 'array',",
+							"                items: {",
+							"                    type: 'object',",
+							"                    properties: {",
+							"                        Last_Update: {",
+							"                            type: 'number'",
+							"                        },",
+							"                        Name: {",
+							"                            type: 'string',",
+							"                            pattern: '^[A-Za-z0-9-_\\\\s]*$'",
+							"                        },",
+							"                        Project_Id: {",
+							"                            type: 'string',",
+							"                            pattern: '^[\\\\w\\\\d]{8}-[\\\\w\\\\d]{4}-[\\\\w\\\\d]{4}-[\\\\w\\\\d]{4}-[\\\\w\\\\d]{12}$'",
+							"                        }",
+							"                    },",
+							"                    require: ['Last_Update', 'Name', 'Project_Id'],",
+							"                    additionalProperties: false",
+							"                }",
+							"            }",
+							"        },",
+							"        require: ['Data'],",
+							"        additionalProperties: false",
+							"    }",
+							"    pm.response.to.have.jsonSchema(schema)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "4ded33b8-f561-486c-8897-4dd830be5259",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"id": "7b93c720-689a-46b4-87bd-d49696c4eaaf",
+					"name": "Projects-List-All-IDs",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "x-api-key",
+								"value": "{{api_key_project}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects?db_schema_version=v1",
+							"protocol": "https",
+							"host": [
+								"project",
+								"api",
+								"{{api_version}}",
+								"{{customer_code}}",
+								"{{env}}",
+								"manccs",
+								"co",
+								"uk"
+							],
+							"path": [
+								"projects"
+							],
+							"query": [
+								{
+									"key": "db_schema_version",
+									"value": "v1"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "Date",
+							"value": "Wed, 10 Apr 2024 09:55:15 GMT"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json"
+						},
+						{
+							"key": "Content-Length",
+							"value": "1161"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						},
+						{
+							"key": "x-amzn-RequestId",
+							"value": "f5bb7e99-6349-4d92-8128-58dffa41aadc"
+						},
+						{
+							"key": "Access-Control-Allow-Origin",
+							"value": "*"
+						},
+						{
+							"key": "x-amz-apigw-id",
+							"value": "WARAhEZqrPEEc4g="
+						},
+						{
+							"key": "X-Amzn-Trace-Id",
+							"value": "Root=1-66166203-008186bb1759e51745dfd8fd;Parent=681ea6d12b4aa77c;Sampled=0;lineage=04ff17ae:0"
+						}
+					],
+					"cookie": [],
+					"responseTime": null,
+					"body": "{\n    \"Data\": [\n        {\n            \"Last_Update\": 1712678307,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"01021f70-f68a-11ee-bfaa-c9f67ae54d55\"\n        },\n        {\n            \"Last_Update\": 1712665950,\n            \"Name\": \"test\",\n            \"Project_Id\": \"53b020dc-f389-11ee-a84e-29c95f305f05\"\n        },\n        {\n            \"Last_Update\": 1712348163,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"53b020dc-f389-11ee-a84e-29c95f305f05\"\n        },\n        {\n            \"Last_Update\": 1712678905,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"6559362f-f68b-11ee-a842-b1b526cee9fa\"\n        },\n        {\n            \"Last_Update\": 1712398478,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"79f3d438-f3fe-11ee-966a-7983f00b2c19\"\n        },\n        {\n            \"Last_Update\": 1712678085,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"7c90ef25-f689-11ee-a100-c9f67ae54d55\"\n        },\n        {\n            \"Last_Update\": 1712348268,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"92614332-f389-11ee-aee7-29c95f305f05\"\n        },\n        {\n            \"Last_Update\": 1712666147,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"b0d6584b-f66d-11ee-b943-f32910f8aee5\"\n        },\n        {\n            \"Last_Update\": 1712666779,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"c54b32c6-f66d-11ee-b649-f32910f8aee5\"\n        },\n        {\n            \"Last_Update\": 1712678271,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"eb932f99-f689-11ee-b6a6-c9f67ae54d55\"\n        },\n        {\n            \"Last_Update\": 1712678281,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"f11e59ca-f689-11ee-af56-c9f67ae54d55\"\n        }\n    ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Project-ID-Get",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "745ecc3e-6a06-4bd5-b855-def64ffd2f21",
+						"exec": [
+							"console.clear();",
+							"let response",
+							"console.log(pm.response);",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"})",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"// Check the Project Detail Data Types",
+							"pm.test(\"Project Detail Data Types\", function () {",
+							"    pm.expect(response).to.have.property(\"Data\")",
+							"    pm.expect(response.Data).to.be.a(\"object\")",
+							"    pm.expect(response.Data).to.have.property(\"Project_Details\")",
+							"    pm.expect(response.Data.Project_Details).to.be.a(\"object\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Name\")",
+							"    pm.expect(response.Data.Project_Details.Name).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Description\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Created\")",
+							"    pm.expect(response.Data.Project_Details.Created).to.be.a(\"number\")",
+							"    pm.expect(response.Data.Project_Details.Created).to.be.greaterThan(0)",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Db_Schema_Vertion\")",
+							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Data_Import\")",
+							"    pm.expect(response.Data.Project_Details.Data_Import).to.be.a(\"bool\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Last_Update\")",
+							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.a(\"number\")",
+							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.greaterThan(0)",
+							"})",
+							"",
+							"// Check the Project Detail Values",
+							"pm.test(\"Project Detail Values\", function () {",
+							"    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
+							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
+							"    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "247f5b1f-f75b-42bb-a5d5-0d328f38b616",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Project-ID-Convolution-Post",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "745ecc3e-6a06-4bd5-b855-def64ffd2f21",
+						"exec": [
+							"console.clear();",
+							"let response",
+							"console.log(pm.response);",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"})",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"// Check the Project Detail Data Types",
+							"pm.test(\"Project Detail Data Types\", function () {",
+							"    pm.expect(response).to.have.property(\"Data\")",
+							"    pm.expect(response.Data).to.be.a(\"object\")",
+							"    pm.expect(response.Data).to.have.property(\"Project_Details\")",
+							"    pm.expect(response.Data.Project_Details).to.be.a(\"object\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Name\")",
+							"    pm.expect(response.Data.Project_Details.Name).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Description\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Created\")",
+							"    pm.expect(response.Data.Project_Details.Created).to.be.a(\"number\")",
+							"    pm.expect(response.Data.Project_Details.Created).to.be.greaterThan(0)",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Db_Schema_Vertion\")",
+							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Data_Import\")",
+							"    pm.expect(response.Data.Project_Details.Data_Import).to.be.a(\"bool\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Last_Update\")",
+							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.a(\"number\")",
+							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.greaterThan(0)",
+							"})",
+							"",
+							"// Check the Project Detail Values",
+							"pm.test(\"Project Detail Values\", function () {",
+							"    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
+							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
+							"    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "047788a1-e74d-4030-919a-541d9030b55d",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/convolution?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"convolution"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Layer-ID-Get-Details",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "5e63f785-3ac6-4d2c-9c48-d72ddaf21c89",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/layers/{{layer_id}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"layers",
+						"{{layer_id}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Layer-Update-By-ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "4e1941ae-264b-453e-a74e-a589250228f2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"layer_details\": {\n        \"Rho\": 1,\n        \"Vp\": 2,\n        \"Top_Depth\": 800,\n        \"Vs\": 1\n        }\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/layers/{{layer_id}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"layers",
+						"{{layer_id}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Layer-Create-New",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "16808564-f264-4840-9e86-bc13c89c51dc",
+						"exec": [
+							"console.clear();",
+							"let response",
+							"",
+							"// Check that we are getting back a 200 OK",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"    //save the project_id from the json to the post man variable",
+							"    pm.collectionVariables.set('layer_id', response.Data.layer_id )",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "c89b7738-d345-4a37-b092-e0f3eda40cf0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"layer_details\": {\n        \"Rho\": 1,\n        \"Vp\": 2,\n        \"Top_Depth\": 54.2,\n        \"Vs\": 1,\n        \"Formation_Name\": \"weebaws\",\n        \"Model_Parameters\": {\n            \"Calibration_Parameters\" : {\n                \"Km\": 1,\n                \"Phi\": 0.1,\n                \"Fluid_1\" : {\n                    \"Name\" : \"baws01\",\n                    \"Density\": 1,\n                    \"Modulus\": 1,\n                    \"Viscosity\": 1\n                },\n                \"Fluid_2\" : {\n                    \"Name\" : \"baws01\",\n                    \"Density\": 1,\n                    \"Modulus\": 1,\n                    \"Viscosity\": 1\n                },\n                \"Permeability\" : 1,\n                \"Patch_Size\": 1,\n                \"Crack_Density\": 1,\n                \"Aspect_Ratio\": 1\n            },\n            \"Evaluation_Parameters\": {\n                \"Patch_Parameter\" : 1,\n                \"Microcrack_Density\": 1,\n                \"Horizontal_Fracture_Density\" : 0.1,\n                \"Horizontal_Fracture_Relative_Size\" : 1,\n                \"Vertical_Fracture_Relative_Size\" : 1,\n                \"Vertical_Fracture_Density\": 1,\n                \"Permeability\": 1,\n                \"Brooks_Corey_Lambda\": 1,\n                \"Reference_Frequency\": 1\n            }\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/layers?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"layers"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Layer-Delete-By-ID",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "087259fc-d186-43c7-8050-afb13d1eea21",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/layers/{{layer_id}}?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"layers",
+						"{{layer_id}}"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Layers-Import",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "c31523ff-b800-4278-8ee6-ed6c85dd72c2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "Rho,Vp,Top_Depth,Vs,Formation_Name\n3.66,5.39,9187.77,1.0,Salix myrsinites L.\n2.01,2.69,2195.31,1.99,\n3.06,7.38,2209.83,0.66,\n3.78,7.79,8820.17,0.58,\n3.87,4.07,5079.18,1.52,Nymphaea rudgeana G. Mey.\n1.18,5.03,9561.31,2.45,\n1.29,5.01,3947.27,1.81,Phlox glaberrima L. ssp. triflora (Michx.) Wherry\n1.26,2.89,2845.69,0.68,Agrostis clavata Trin.\n2.7,3.74,3496.12,1.99,Viola triloba Schwein.\n1.09,6.45,4655.17,0.42,Clarkia australis E. Small",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/import?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"import"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": {
+			"refreshRequestParams": [
+				{
+					"key": "grant_type",
+					"value": "refresh_token",
+					"enabled": true,
+					"send_as": "request_body"
+				},
+				{
+					"key": "client_id",
+					"value": "{{cognito_app_user_id}}",
+					"enabled": true,
+					"send_as": "request_body"
+				}
+			],
+			"clientId": "{{cognito_app_user_id}}",
+			"tokenName": "User-Auth-Code-{{$isoTimestamp}}",
+			"tokenType": "Bearer",
+			"accessToken": "eyJraWQiOiJBRlR5Z1BcL0JSNlo1TlFRVUNoNjBUTmx3MGl6cVNcL1VWMFVnUnd1RHBsak09IiwiYWxnIjoiUlMyNTYifQ.eyJzdWIiOiJlNmIyZDI5NC00MGIxLTcwYmItZjkxZi00ZGMyMWNlN2Y5NDAiLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuZXUtd2VzdC0yLmFtYXpvbmF3cy5jb21cL2V1LXdlc3QtMl9zcXByVDE1dkUiLCJ2ZXJzaW9uIjoyLCJjbGllbnRfaWQiOiIyOTZldmdtYzc0aTY0cHBuZGRjMWxrdmFtdSIsIm9yaWdpbl9qdGkiOiJkYWM1ZWNmYy1iZjM3LTRlOTItYTI0OS04YTMzOWMyZjFkNGEiLCJldmVudF9pZCI6ImJmNTI1OTI2LWFkMTAtNDViMS05NmY1LWJjNjZjNzNkMzg5ZCIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYWJjZC1hcGktYWNjZXNzXC9zdGQiLCJhdXRoX3RpbWUiOjE3MTI1OTAwMDUsImV4cCI6MTcxMjU5MzYwNSwiaWF0IjoxNzEyNTkwMDA1LCJqdGkiOiJlMWIwOGI0NC03NjlmLTQ2ZTMtYmUzNC0wYzllMjY5ZGJhMjEiLCJ1c2VybmFtZSI6ImU2YjJkMjk0LTQwYjEtNzBiYi1mOTFmLTRkYzIxY2U3Zjk0MCJ9.dxGFAYKl1dK6X6sdySYKtzgbswCbnE1dlLz1opGF7SFGSdzbyXswF8gYsxJ6qyxCIwq97lMPr_hTJji0Yobg2UM862IWvc4fpfdX3Ue65cPdfkDAn7y_QX18FmLLTikxwNpKVxUQ1xyAOZS33gMkvnn9dOR2HcJbiBCmVAwmltcYg7Z278fkIox7V7gDo3b8X2qoykW2039GYOqDmRtX7_Nxt6gGdBkImf0jaWKWQqw9nrYB1UOxtcI0Rv3AcVF0PnMduHjqssxiafVHCPgVOGWTS4LpUpjtksAKzDP0z4QIRcGkM42L4oLfbnEJiUIBTyve0NCodl7IEtDOvBE7xw",
+			"useBrowser": false,
+			"tokenRequestParams": [],
+			"authRequestParams": [],
+			"challengeAlgorithm": "S256",
+			"scope": "{{customer_code}}-api-access/std email openid profile",
+			"redirect_uri": "https://{{customer_code}}.{{env}}.manccs.co.uk",
+			"grant_type": "authorization_code",
+			"authUrl": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/authorize",
+			"addTokenTo": "header",
+			"client_authentication": "body",
+			"accessTokenUrl": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/token"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "ed8d56a3-a501-41a2-b964-bcb43d8e6330",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "35305452-3741-4109-89e7-b4b8fd655d94",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "project_id",
+			"value": "Enter a valid Project ID",
+			"type": "string"
+		},
+		{
+			"key": "layer_id",
+			"value": "Enter a valid Layer ID",
+			"type": "string"
+		},
+		{
+			"key": "api_version",
+			"value": "Enter the API vertion",
+			"type": "string"
+		}
+	]
+}
