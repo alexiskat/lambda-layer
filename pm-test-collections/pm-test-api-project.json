@@ -1131,7 +1131,7 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "ed8d56a3-a501-41a2-b964-bcb43d8e6330",
+				"id": "94c0a807-6132-4fd6-9f5e-4cc19d451797",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1141,7 +1141,7 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "35305452-3741-4109-89e7-b4b8fd655d94",
+				"id": "b502e5a1-abef-4b39-a1ee-bfc0e04fe37d",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -1162,7 +1162,7 @@
 		},
 		{
 			"key": "api_version",
-			"value": "Enter the API vertion",
+			"value": "v1",
 			"type": "string"
 		}
 	]
