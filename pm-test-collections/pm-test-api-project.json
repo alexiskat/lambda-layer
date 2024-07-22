@@ -300,7 +300,7 @@
 							"// Check the Project Detail Values",
 							"pm.test(\"Project Detail Values\", function () {",
 							"    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
-							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"tinybaws444\")",
 							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
 							"    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
 							"})"
