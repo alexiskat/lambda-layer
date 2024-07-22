@@ -375,7 +375,7 @@
 						"id": "0815a439-8263-4896-90e1-db250767bdda",
 						"exec": [
 							"console.clear();",
-							"console.log(pm.response);",
+							"//console.log(pm.response);",
 							"",
 							"let response",
 							"",
@@ -659,7 +659,7 @@
 						"exec": [
 							"console.clear();",
 							"let response",
-							"console.log(pm.response);",
+							"//console.log(pm.response);",
 							"",
 							"// Check that we are getting back json",
 							"pm.test(\"Response body is JSON\", function () {",
