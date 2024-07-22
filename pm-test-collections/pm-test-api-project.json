@@ -363,7 +363,7 @@
 					"script": {
 						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
 						"exec": [
-							"console.log(\"Hello world. PreSend\")"
+							""
 						],
 						"type": "text/javascript",
 						"packages": {}
