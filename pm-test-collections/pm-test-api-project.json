@@ -896,7 +896,7 @@
 							"pm.test(\"Response body is JSON\", function () {",
 							"    pm.response.to.be.json // we expect the body to be json format",
 							"    response = pm.response.json()",
-							"    //save the project_id from the json to the post man variable",
+							"    //save the layer_id from the json to the post man variable",
 							"    pm.collectionVariables.set('layer_id', response.Data.layer_id )",
 							"})"
 						],
