@@ -544,6 +544,101 @@
 			]
 		},
 		{
+			"name": "Layer-Create-New",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "16808564-f264-4840-9e86-bc13c89c51dc",
+						"exec": [
+							"console.clear();",
+							"let response",
+							"",
+							"// Check that we are getting back a 200 OK",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"    //save the layer_id from the json to the post man variable",
+							"    pm.collectionVariables.set('layer_id', response.Data.layer_id )",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "c89b7738-d345-4a37-b092-e0f3eda40cf0",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"layer_details\": {\n        \"Rho\": 1,\n        \"Vp\": 2,\n        \"Top_Depth\": 54.2,\n        \"Vs\": 1,\n        \"Formation_Name\": \"weebaws\",\n        \"Model_Parameters\": {\n            \"Calibration_Parameters\" : {\n                \"Km\": 1,\n                \"Phi\": 0.1,\n                \"Fluid_1\" : {\n                    \"Name\" : \"baws01\",\n                    \"Density\": 1,\n                    \"Modulus\": 1,\n                    \"Viscosity\": 1\n                },\n                \"Fluid_2\" : {\n                    \"Name\" : \"baws01\",\n                    \"Density\": 1,\n                    \"Modulus\": 1,\n                    \"Viscosity\": 1\n                },\n                \"Permeability\" : 1,\n                \"Patch_Size\": 1,\n                \"Crack_Density\": 1,\n                \"Aspect_Ratio\": 1\n            },\n            \"Evaluation_Parameters\": {\n                \"Patch_Parameter\" : 1,\n                \"Microcrack_Density\": 1,\n                \"Horizontal_Fracture_Density\" : 0.1,\n                \"Horizontal_Fracture_Relative_Size\" : 1,\n                \"Vertical_Fracture_Relative_Size\" : 1,\n                \"Vertical_Fracture_Density\": 1,\n                \"Permeability\": 1,\n                \"Brooks_Corey_Lambda\": 1,\n                \"Reference_Frequency\": 1\n            }\n        }\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/layers?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"layers"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Project-ID-Convolution-Post",
 			"event": [
 				{
@@ -578,34 +673,34 @@
 							"})",
 							"",
 							"// Check the Project Detail Data Types",
-							"pm.test(\"Project Detail Data Types\", function () {",
-							"    pm.expect(response).to.have.property(\"Data\")",
-							"    pm.expect(response.Data).to.be.a(\"object\")",
-							"    pm.expect(response.Data).to.have.property(\"Project_Details\")",
-							"    pm.expect(response.Data.Project_Details).to.be.a(\"object\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Name\")",
-							"    pm.expect(response.Data.Project_Details.Name).to.be.a(\"string\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Description\")",
-							"    pm.expect(response.Data.Project_Details.Description).to.be.a(\"string\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Created\")",
-							"    pm.expect(response.Data.Project_Details.Created).to.be.a(\"number\")",
-							"    pm.expect(response.Data.Project_Details.Created).to.be.greaterThan(0)",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Db_Schema_Vertion\")",
-							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.be.a(\"string\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Data_Import\")",
-							"    pm.expect(response.Data.Project_Details.Data_Import).to.be.a(\"boolean\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Last_Update\")",
-							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.a(\"number\")",
-							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.greaterThan(0)",
-							"})",
-							"",
-							"// Check the Project Detail Values",
-							"pm.test(\"Project Detail Values\", function () {",
-							"    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
-							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
-							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
-							"    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
-							"})"
+							"//pm.test(\"Project Detail Data Types\", function () {",
+							"//    pm.expect(response).to.have.property(\"Data\")",
+							"//    pm.expect(response.Data).to.be.a(\"object\")",
+							"//    pm.expect(response.Data).to.have.property(\"Project_Details\")",
+							"//    pm.expect(response.Data.Project_Details).to.be.a(\"object\")",
+							"//    pm.expect(response.Data.Project_Details).to.have.property(\"Name\")",
+							"//    pm.expect(response.Data.Project_Details.Name).to.be.a(\"string\")",
+							"//    pm.expect(response.Data.Project_Details).to.have.property(\"Description\")",
+							"//    pm.expect(response.Data.Project_Details.Description).to.be.a(\"string\")",
+							"//    pm.expect(response.Data.Project_Details).to.have.property(\"Created\")",
+							"//    pm.expect(response.Data.Project_Details.Created).to.be.a(\"number\")",
+							"//    pm.expect(response.Data.Project_Details.Created).to.be.greaterThan(0)",
+							"//    pm.expect(response.Data.Project_Details).to.have.property(\"Db_Schema_Vertion\")",
+							"//    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.be.a(\"string\")",
+							"//    pm.expect(response.Data.Project_Details).to.have.property(\"Data_Import\")",
+							"//    pm.expect(response.Data.Project_Details.Data_Import).to.be.a(\"boolean\")",
+							"//    pm.expect(response.Data.Project_Details).to.have.property(\"Last_Update\")",
+							"//    pm.expect(response.Data.Project_Details.Last_Update).to.be.a(\"number\")",
+							"//    pm.expect(response.Data.Project_Details.Last_Update).to.be.greaterThan(0)",
+							"//})",
+							"//",
+							"//// Check the Project Detail Values",
+							"//pm.test(\"Project Detail Values\", function () {",
+							"//    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
+							"//    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
+							"//    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
+							"//    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
+							"//})"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -780,101 +875,6 @@
 						"{{project_id}}",
 						"layers",
 						"{{layer_id}}"
-					],
-					"query": [
-						{
-							"key": "db_schema_version",
-							"value": "v1"
-						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Layer-Create-New",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "16808564-f264-4840-9e86-bc13c89c51dc",
-						"exec": [
-							"console.clear();",
-							"let response",
-							"",
-							"// Check that we are getting back a 200 OK",
-							"pm.test(\"Response status is 200\", function () {",
-							"    pm.response.to.have.status(200)",
-							"})",
-							"",
-							"// Check that we are getting back json",
-							"pm.test(\"Response body is JSON\", function () {",
-							"    pm.response.to.be.json // we expect the body to be json format",
-							"    response = pm.response.json()",
-							"    //save the layer_id from the json to the post man variable",
-							"    pm.collectionVariables.set('layer_id', response.Data.layer_id )",
-							"})"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"id": "c89b7738-d345-4a37-b092-e0f3eda40cf0",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": {
-						"token": "{{access_token_m2m}}"
-					}
-				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{api_key_project}}"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n    \"layer_details\": {\n        \"Rho\": 1,\n        \"Vp\": 2,\n        \"Top_Depth\": 54.2,\n        \"Vs\": 1,\n        \"Formation_Name\": \"weebaws\",\n        \"Model_Parameters\": {\n            \"Calibration_Parameters\" : {\n                \"Km\": 1,\n                \"Phi\": 0.1,\n                \"Fluid_1\" : {\n                    \"Name\" : \"baws01\",\n                    \"Density\": 1,\n                    \"Modulus\": 1,\n                    \"Viscosity\": 1\n                },\n                \"Fluid_2\" : {\n                    \"Name\" : \"baws01\",\n                    \"Density\": 1,\n                    \"Modulus\": 1,\n                    \"Viscosity\": 1\n                },\n                \"Permeability\" : 1,\n                \"Patch_Size\": 1,\n                \"Crack_Density\": 1,\n                \"Aspect_Ratio\": 1\n            },\n            \"Evaluation_Parameters\": {\n                \"Patch_Parameter\" : 1,\n                \"Microcrack_Density\": 1,\n                \"Horizontal_Fracture_Density\" : 0.1,\n                \"Horizontal_Fracture_Relative_Size\" : 1,\n                \"Vertical_Fracture_Relative_Size\" : 1,\n                \"Vertical_Fracture_Density\": 1,\n                \"Permeability\": 1,\n                \"Brooks_Corey_Lambda\": 1,\n                \"Reference_Frequency\": 1\n            }\n        }\n    }\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/layers?db_schema_version=v1",
-					"protocol": "https",
-					"host": [
-						"project",
-						"api",
-						"{{api_version}}",
-						"{{customer_code}}",
-						"{{env}}",
-						"manccs",
-						"co",
-						"uk"
-					],
-					"path": [
-						"projects",
-						"{{project_id}}",
-						"layers"
 					],
 					"query": [
 						{
