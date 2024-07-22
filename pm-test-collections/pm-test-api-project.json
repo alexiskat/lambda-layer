@@ -524,7 +524,6 @@
 						"exec": [
 							"console.clear();",
 							"let response",
-							"console.log(pm.response);",
 							"",
 							"// Check that we are getting back json",
 							"pm.test(\"Response body is JSON\", function () {",
