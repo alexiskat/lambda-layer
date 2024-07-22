@@ -242,7 +242,7 @@
 			"response": []
 		},
 		{
-			"name": "Project-Delete-By-ID",
+			"name": "Project-ID-Get",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -258,11 +258,51 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "639400a9-b447-4e07-9de3-49b9f9db5736",
+						"id": "745ecc3e-6a06-4bd5-b855-def64ffd2f21",
 						"exec": [
-							"// Check that we are getting back a 200 OK",
+							"console.clear();",
+							"let response",
+							"",
+							"// Check that we are getting back json",
+							"pm.test(\"Response body is JSON\", function () {",
+							"    pm.response.to.be.json // we expect the body to be json format",
+							"    response = pm.response.json()",
+							"})",
+							"",
+							"// Check that we are getting back json",
 							"pm.test(\"Response status is 200\", function () {",
 							"    pm.response.to.have.status(200)",
+							"})",
+							"",
+							"//console.log(typeof(response.Data.Project_Details.Data_Import))",
+							"// Check the Project Detail Data Types",
+							"pm.test(\"Project Detail Data Types\", function () {",
+							"    pm.expect(response).to.have.property(\"Data\")",
+							"    pm.expect(response.Data).to.be.a(\"object\")",
+							"    pm.expect(response.Data).to.have.property(\"Project_Details\")",
+							"    pm.expect(response.Data.Project_Details).to.be.a(\"object\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Name\")",
+							"    pm.expect(response.Data.Project_Details.Name).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Description\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Created\")",
+							"    pm.expect(response.Data.Project_Details.Created).to.be.a(\"number\")",
+							"    pm.expect(response.Data.Project_Details.Created).to.be.greaterThan(0)",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Db_Schema_Vertion\")",
+							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.be.a(\"string\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Data_Import\")",
+							"    pm.expect(response.Data.Project_Details.Data_Import).to.be.a(\"boolean\")",
+							"    pm.expect(response.Data.Project_Details).to.have.property(\"Last_Update\")",
+							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.a(\"number\")",
+							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.greaterThan(0)",
+							"})",
+							"",
+							"// Check the Project Detail Values",
+							"pm.test(\"Project Detail Values\", function () {",
+							"    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
+							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
+							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
+							"    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
 							"})"
 						],
 						"type": "text/javascript",
@@ -270,7 +310,7 @@
 					}
 				}
 			],
-			"id": "b4a12d44-3afa-4493-a4d7-b5caf884a90d",
+			"id": "247f5b1f-f75b-42bb-a5d5-0d328f38b616",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -281,7 +321,7 @@
 						"token": "{{access_token_m2m}}"
 					}
 				},
-				"method": "DELETE",
+				"method": "GET",
 				"header": [
 					{
 						"key": "x-api-key",
@@ -502,120 +542,6 @@
 					"body": "{\n    \"Data\": [\n        {\n            \"Last_Update\": 1712678307,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"01021f70-f68a-11ee-bfaa-c9f67ae54d55\"\n        },\n        {\n            \"Last_Update\": 1712665950,\n            \"Name\": \"test\",\n            \"Project_Id\": \"53b020dc-f389-11ee-a84e-29c95f305f05\"\n        },\n        {\n            \"Last_Update\": 1712348163,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"53b020dc-f389-11ee-a84e-29c95f305f05\"\n        },\n        {\n            \"Last_Update\": 1712678905,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"6559362f-f68b-11ee-a842-b1b526cee9fa\"\n        },\n        {\n            \"Last_Update\": 1712398478,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"79f3d438-f3fe-11ee-966a-7983f00b2c19\"\n        },\n        {\n            \"Last_Update\": 1712678085,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"7c90ef25-f689-11ee-a100-c9f67ae54d55\"\n        },\n        {\n            \"Last_Update\": 1712348268,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"92614332-f389-11ee-aee7-29c95f305f05\"\n        },\n        {\n            \"Last_Update\": 1712666147,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"b0d6584b-f66d-11ee-b943-f32910f8aee5\"\n        },\n        {\n            \"Last_Update\": 1712666779,\n            \"Name\": \"baw1\",\n            \"Project_Id\": \"c54b32c6-f66d-11ee-b649-f32910f8aee5\"\n        },\n        {\n            \"Last_Update\": 1712678271,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"eb932f99-f689-11ee-b6a6-c9f67ae54d55\"\n        },\n        {\n            \"Last_Update\": 1712678281,\n            \"Name\": \"project abcd\",\n            \"Project_Id\": \"f11e59ca-f689-11ee-af56-c9f67ae54d55\"\n        }\n    ]\n}"
 				}
 			]
-		},
-		{
-			"name": "Project-ID-Get",
-			"event": [
-				{
-					"listen": "prerequest",
-					"script": {
-						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
-						"exec": [
-							""
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				},
-				{
-					"listen": "test",
-					"script": {
-						"id": "745ecc3e-6a06-4bd5-b855-def64ffd2f21",
-						"exec": [
-							"console.clear();",
-							"let response",
-							"",
-							"// Check that we are getting back json",
-							"pm.test(\"Response body is JSON\", function () {",
-							"    pm.response.to.be.json // we expect the body to be json format",
-							"    response = pm.response.json()",
-							"})",
-							"",
-							"// Check that we are getting back json",
-							"pm.test(\"Response status is 200\", function () {",
-							"    pm.response.to.have.status(200)",
-							"})",
-							"",
-							"//console.log(typeof(response.Data.Project_Details.Data_Import))",
-							"// Check the Project Detail Data Types",
-							"pm.test(\"Project Detail Data Types\", function () {",
-							"    pm.expect(response).to.have.property(\"Data\")",
-							"    pm.expect(response.Data).to.be.a(\"object\")",
-							"    pm.expect(response.Data).to.have.property(\"Project_Details\")",
-							"    pm.expect(response.Data.Project_Details).to.be.a(\"object\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Name\")",
-							"    pm.expect(response.Data.Project_Details.Name).to.be.a(\"string\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Description\")",
-							"    pm.expect(response.Data.Project_Details.Description).to.be.a(\"string\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Created\")",
-							"    pm.expect(response.Data.Project_Details.Created).to.be.a(\"number\")",
-							"    pm.expect(response.Data.Project_Details.Created).to.be.greaterThan(0)",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Db_Schema_Vertion\")",
-							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.be.a(\"string\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Data_Import\")",
-							"    pm.expect(response.Data.Project_Details.Data_Import).to.be.a(\"boolean\")",
-							"    pm.expect(response.Data.Project_Details).to.have.property(\"Last_Update\")",
-							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.a(\"number\")",
-							"    pm.expect(response.Data.Project_Details.Last_Update).to.be.greaterThan(0)",
-							"})",
-							"",
-							"// Check the Project Detail Values",
-							"pm.test(\"Project Detail Values\", function () {",
-							"    pm.expect(response.Data.Project_Details.Name).to.eql(\"project abcd\")",
-							"    pm.expect(response.Data.Project_Details.Description).to.eql(\"project description for abcd\")",
-							"    pm.expect(response.Data.Project_Details.Db_Schema_Vertion).to.eql(\"v1\")",
-							"    pm.expect(response.Data.Project_Details.Data_Import).to.eql(false)",
-							"})"
-						],
-						"type": "text/javascript",
-						"packages": {}
-					}
-				}
-			],
-			"id": "247f5b1f-f75b-42bb-a5d5-0d328f38b616",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": {
-						"token": "{{access_token_m2m}}"
-					}
-				},
-				"method": "GET",
-				"header": [
-					{
-						"key": "x-api-key",
-						"value": "{{api_key_project}}"
-					}
-				],
-				"url": {
-					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}?db_schema_version=v1",
-					"protocol": "https",
-					"host": [
-						"project",
-						"api",
-						"{{api_version}}",
-						"{{customer_code}}",
-						"{{env}}",
-						"manccs",
-						"co",
-						"uk"
-					],
-					"path": [
-						"projects",
-						"{{project_id}}"
-					],
-					"query": [
-						{
-							"key": "db_schema_version",
-							"value": "v1"
-						}
-					]
-				}
-			},
-			"response": []
 		},
 		{
 			"name": "Project-ID-Convolution-Post",
@@ -961,6 +887,76 @@
 			"response": []
 		},
 		{
+			"name": "Layers-Import",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "10a9e6e0-43ca-4235-81f7-994143a32c65",
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "c31523ff-b800-4278-8ee6-ed6c85dd72c2",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": {
+						"token": "{{access_token_m2m}}"
+					}
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-api-key",
+						"value": "{{api_key_project}}"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "Rho,Vp,Top_Depth,Vs,Formation_Name\n3.66,5.39,9187.77,1.0,Salix myrsinites L.\n2.01,2.69,2195.31,1.99,\n3.06,7.38,2209.83,0.66,\n3.78,7.79,8820.17,0.58,\n3.87,4.07,5079.18,1.52,Nymphaea rudgeana G. Mey.\n1.18,5.03,9561.31,2.45,\n1.29,5.01,3947.27,1.81,Phlox glaberrima L. ssp. triflora (Michx.) Wherry\n1.26,2.89,2845.69,0.68,Agrostis clavata Trin.\n2.7,3.74,3496.12,1.99,Viola triloba Schwein.\n1.09,6.45,4655.17,0.42,Clarkia australis E. Small",
+					"options": {
+						"raw": {
+							"language": "text"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/import?db_schema_version=v1",
+					"protocol": "https",
+					"host": [
+						"project",
+						"api",
+						"{{api_version}}",
+						"{{customer_code}}",
+						"{{env}}",
+						"manccs",
+						"co",
+						"uk"
+					],
+					"path": [
+						"projects",
+						"{{project_id}}",
+						"import"
+					],
+					"query": [
+						{
+							"key": "db_schema_version",
+							"value": "v1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "Layer-Delete-By-ID",
 			"event": [
 				{
@@ -1023,7 +1019,7 @@
 			"response": []
 		},
 		{
-			"name": "Layers-Import",
+			"name": "Project-Delete-By-ID",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -1035,9 +1031,23 @@
 						"type": "text/javascript",
 						"packages": {}
 					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "639400a9-b447-4e07-9de3-49b9f9db5736",
+						"exec": [
+							"// Check that we are getting back a 200 OK",
+							"pm.test(\"Response status is 200\", function () {",
+							"    pm.response.to.have.status(200)",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
 				}
 			],
-			"id": "c31523ff-b800-4278-8ee6-ed6c85dd72c2",
+			"id": "b4a12d44-3afa-4493-a4d7-b5caf884a90d",
 			"protocolProfileBehavior": {
 				"disableBodyPruning": true
 			},
@@ -1048,24 +1058,15 @@
 						"token": "{{access_token_m2m}}"
 					}
 				},
-				"method": "POST",
+				"method": "DELETE",
 				"header": [
 					{
 						"key": "x-api-key",
 						"value": "{{api_key_project}}"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "Rho,Vp,Top_Depth,Vs,Formation_Name\n3.66,5.39,9187.77,1.0,Salix myrsinites L.\n2.01,2.69,2195.31,1.99,\n3.06,7.38,2209.83,0.66,\n3.78,7.79,8820.17,0.58,\n3.87,4.07,5079.18,1.52,Nymphaea rudgeana G. Mey.\n1.18,5.03,9561.31,2.45,\n1.29,5.01,3947.27,1.81,Phlox glaberrima L. ssp. triflora (Michx.) Wherry\n1.26,2.89,2845.69,0.68,Agrostis clavata Trin.\n2.7,3.74,3496.12,1.99,Viola triloba Schwein.\n1.09,6.45,4655.17,0.42,Clarkia australis E. Small",
-					"options": {
-						"raw": {
-							"language": "text"
-						}
-					}
-				},
 				"url": {
-					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}/import?db_schema_version=v1",
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects/{{project_id}}?db_schema_version=v1",
 					"protocol": "https",
 					"host": [
 						"project",
@@ -1079,8 +1080,7 @@
 					],
 					"path": [
 						"projects",
-						"{{project_id}}",
-						"import"
+						"{{project_id}}"
 					],
 					"query": [
 						{
