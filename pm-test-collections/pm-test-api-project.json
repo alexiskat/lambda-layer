@@ -147,7 +147,7 @@
 					}
 				},
 				"url": {
-					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.manccs.co.uk/projects?db_schema_version=v1",
+					"raw": "https://project.api.{{api_version}}.{{customer_code}}.{{env}}.mantis-geophysics.io/projects?db_schema_version=v1",
 					"protocol": "https",
 					"host": [
 						"project",
@@ -155,9 +155,8 @@
 						"{{api_version}}",
 						"{{customer_code}}",
 						"{{env}}",
-						"manccs",
-						"co",
-						"uk"
+						"mantis-geophysics",
+						"io"
 					],
 					"path": [
 						"projects"
