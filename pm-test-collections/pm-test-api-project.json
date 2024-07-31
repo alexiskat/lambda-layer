@@ -75,7 +75,7 @@
 						}
 					]
 				},
-				"url": "https://auth.{{customer_code}}.{{env}}.manccs.co.uk/oauth2/token"
+				"url": "https://auth.{{customer_code}}.{{env}}.mantis-geophysics.io/oauth2/token"
 			},
 			"response": []
 		},
